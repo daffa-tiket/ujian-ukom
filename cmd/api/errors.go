@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 	"strings"
 
+	"projects/internal/dto"
 	"projects/internal/response"
 	"projects/internal/validator"
 )
@@ -19,7 +21,12 @@ func (app *application) reportError(err error) {
 func (app *application) errorMessage(w http.ResponseWriter, r *http.Request, status int, message string, headers http.Header) {
 	message = strings.ToUpper(message[:1]) + message[1:]
 
-	err := response.JSONWithHeaders(w, status, map[string]string{"Error": message}, headers)
+	data := dto.BaseResponse{
+		Status: strconv.Itoa(status),
+		Message: message,
+	}
+
+	err := response.JSONWithHeaders(w, status, data, headers)
 	if err != nil {
 		app.reportError(err)
 		w.WriteHeader(http.StatusInternalServerError)

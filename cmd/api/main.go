@@ -11,6 +11,8 @@ import (
 	"projects/internal/database"
 	"projects/internal/env"
 	"projects/internal/version"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func main() {
@@ -37,6 +39,7 @@ type application struct {
 	db     *database.DB
 	logger *log.Logger
 	wg     sync.WaitGroup
+	validator *validator.Validate
 }
 
 func run(logger *log.Logger) error {
@@ -44,7 +47,7 @@ func run(logger *log.Logger) error {
 
 	cfg.baseURL = env.GetString("BASE_URL", "http://localhost:4444")
 	cfg.httpPort = env.GetInt("HTTP_PORT", 4444)
-	cfg.db.dsn = env.GetString("DB_DSN", "user:pass@localhost:5432/db")
+	cfg.db.dsn = env.GetString("DB_DSN", "daffashafwan:@localhost:5432/appdb?sslmode=disable")
 	cfg.db.automigrate = env.GetBool("DB_AUTOMIGRATE", true)
 
 	showVersion := flag.Bool("version", false, "display version and exit")
@@ -62,10 +65,13 @@ func run(logger *log.Logger) error {
 	}
 	defer db.Close()
 
+	validate := validator.New()
+
 	app := &application{
 		config: cfg,
 		db:     db,
 		logger: logger,
+		validator: validate,
 	}
 
 	return app.serveHTTP()
