@@ -47,7 +47,7 @@ func run(logger *log.Logger) error {
 
 	cfg.baseURL = env.GetString("BASE_URL", "http://localhost:4444")
 	cfg.httpPort = env.GetInt("HTTP_PORT", 4444)
-	cfg.db.dsn = env.GetString("DB_DSN", "daffashafwan:@localhost:5432/appdb?sslmode=disable")
+	cfg.db.dsn = env.GetString("DB_DSN", "daffa.dev:daffa.dev@localhost:5432/appdb?sslmode=disable")
 	cfg.db.automigrate = env.GetBool("DB_AUTOMIGRATE", true)
 
 	showVersion := flag.Bool("version", false, "display version and exit")
