@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (app *application) getCustomers(w http.ResponseWriter, r *http.Request) {
+func (app *Application) getCustomers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	data, err := app.GetAllCustomer()
@@ -20,7 +20,7 @@ func (app *application) getCustomers(w http.ResponseWriter, r *http.Request) {
 	err = response.JSONCustom(w, data, err)
 }
 
-func (app *application) getCustomerByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) getCustomerByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	data, err := app.GetCustomerByID(ps.ByName("id"))
@@ -28,14 +28,14 @@ func (app *application) getCustomerByID(w http.ResponseWriter, r *http.Request, 
 	err = response.JSONCustom(w, data, err)
 }
 
-func (app *application) addCustomer(w http.ResponseWriter, r *http.Request) {
+func (app *Application) addCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var customer, res dto.Customer
 	var err error
 	json.Unmarshal(reqBody, &customer)
 
-	err = app.validator.Struct(customer)
+	err = app.Validator.Struct(customer)
 
 	if err == nil {
 		res, err = app.PostCustomer(customer)
@@ -44,14 +44,14 @@ func (app *application) addCustomer(w http.ResponseWriter, r *http.Request) {
 	err = response.JSONCustom(w, res, err)
 }
 
-func (app *application) editCustomer(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) editCustomer(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var customer, res dto.Customer
 	var err error
 	json.Unmarshal(reqBody, &customer)
 
-	err = app.validator.Struct(customer)
+	err = app.Validator.Struct(customer)
 
 	if err == nil {
 		res, err = app.UpdateCustomer(customer, ps.ByName("id"))
@@ -60,8 +60,8 @@ func (app *application) editCustomer(w http.ResponseWriter, r *http.Request, ps 
 	err = response.JSONCustom(w, res, err)
 }
 
-//Product
-func (app *application) getProducts(w http.ResponseWriter, r *http.Request) {
+// Product
+func (app *Application) getProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	data, err := app.GetAllProduct()
@@ -69,7 +69,7 @@ func (app *application) getProducts(w http.ResponseWriter, r *http.Request) {
 	err = response.JSONCustom(w, data, err)
 }
 
-func (app *application) getProductByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) getProductByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	data, err := app.GetProductByID(ps.ByName("id"))
@@ -77,14 +77,14 @@ func (app *application) getProductByID(w http.ResponseWriter, r *http.Request, p
 	err = response.JSONCustom(w, data, err)
 }
 
-func (app *application) addProduct(w http.ResponseWriter, r *http.Request) {
+func (app *Application) addProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var product, res dto.Product
 	var err error
 	json.Unmarshal(reqBody, &product)
 
-	err = app.validator.Struct(product)
+	err = app.Validator.Struct(product)
 
 	if err == nil {
 		res, err = app.PostProduct(product)
@@ -93,14 +93,14 @@ func (app *application) addProduct(w http.ResponseWriter, r *http.Request) {
 	err = response.JSONCustom(w, res, err)
 }
 
-func (app *application) editProduct(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) editProduct(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var product, res dto.Product
 	var err error
 	json.Unmarshal(reqBody, &product)
 
-	err = app.validator.Struct(product)
+	err = app.Validator.Struct(product)
 
 	if err == nil {
 		res, err = app.UpdateProduct(product, ps.ByName("id"))
@@ -109,9 +109,8 @@ func (app *application) editProduct(w http.ResponseWriter, r *http.Request, ps h
 	err = response.JSONCustom(w, res, err)
 }
 
-
-//Transaction
-func (app *application) getTransactions(w http.ResponseWriter, r *http.Request) {
+// Transaction
+func (app *Application) getTransactions(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	data, err := app.GetAllTransaction()
@@ -119,7 +118,7 @@ func (app *application) getTransactions(w http.ResponseWriter, r *http.Request) 
 	err = response.JSONCustom(w, data, err)
 }
 
-func (app *application) getTransactionByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) getTransactionByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	data, err := app.GetTransactionByID(ps.ByName("id"))
@@ -127,7 +126,7 @@ func (app *application) getTransactionByID(w http.ResponseWriter, r *http.Reques
 	err = response.JSONCustom(w, data, err)
 }
 
-func (app *application) addTransaction(w http.ResponseWriter, r *http.Request) {
+func (app *Application) addTransaction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST")
 	reqBody, _ := ioutil.ReadAll(r.Body)
@@ -135,7 +134,7 @@ func (app *application) addTransaction(w http.ResponseWriter, r *http.Request) {
 	var err error
 	json.Unmarshal(reqBody, &transaction)
 
-	err = app.validator.Struct(transaction)
+	err = app.Validator.Struct(transaction)
 
 	fmt.Println(transaction)
 
@@ -146,14 +145,14 @@ func (app *application) addTransaction(w http.ResponseWriter, r *http.Request) {
 	err = response.JSONCustom(w, res, err)
 }
 
-func (app *application) editTransaction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) editTransaction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var transaction, res dto.Transaction
 	var err error
 	json.Unmarshal(reqBody, &transaction)
 
-	err = app.validator.Struct(transaction)
+	err = app.Validator.Struct(transaction)
 
 	if err == nil {
 		res, err = app.UpdateTransaction(transaction, ps.ByName("id"))
@@ -162,7 +161,7 @@ func (app *application) editTransaction(w http.ResponseWriter, r *http.Request, 
 	err = response.JSONCustom(w, res, err)
 }
 
-func (app *application) removeTransaction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (app *Application) removeTransaction(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	var err error
 	id := ps.ByName("id")

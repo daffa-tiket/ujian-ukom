@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"context"
@@ -18,11 +18,11 @@ const (
 	defaultShutdownPeriod = 30 * time.Second
 )
 
-func (app *application) serveHTTP() error {
+func (app *Application) serveHTTP() error {
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", app.config.httpPort),
+		Addr:         fmt.Sprintf(":%d", app.Config.HttpPort),
 		Handler:      app.routes(),
-		ErrorLog:     app.logger,
+		ErrorLog:     app.Logger,
 		IdleTimeout:  defaultIdleTimeout,
 		ReadTimeout:  defaultReadTimeout,
 		WriteTimeout: defaultWriteTimeout,
@@ -41,7 +41,7 @@ func (app *application) serveHTTP() error {
 		shutdownErrorChan <- srv.Shutdown(ctx)
 	}()
 
-	app.logger.Printf("starting server on %s", srv.Addr)
+	app.Logger.Printf("starting server on %s", srv.Addr)
 
 	err := srv.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
@@ -53,7 +53,7 @@ func (app *application) serveHTTP() error {
 		return err
 	}
 
-	app.logger.Printf("stopped server on %s", srv.Addr)
+	app.Logger.Printf("stopped server on %s", srv.Addr)
 
 	app.wg.Wait()
 	return nil

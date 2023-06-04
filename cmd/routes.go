@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (app *application) routes() http.Handler {
+func (app *Application) routes() http.Handler {
 	mux := httprouter.New()
 
 	mux.NotFound = http.HandlerFunc(app.notFound)

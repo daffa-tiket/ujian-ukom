@@ -1,10 +1,10 @@
-package main
+package cmd
 
 import (
 	"fmt"
 )
 
-func (app *application) backgroundTask(fn func() error) {
+func (app *Application) backgroundTask(fn func() error) {
 	app.wg.Add(1)
 
 	go func() {
