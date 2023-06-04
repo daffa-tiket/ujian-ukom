@@ -8,15 +8,16 @@ import (
 
 // Customer
 func (app *Application) GetAllCustomer() ([]dto.Customer, error) {
-	var err error
-	rows, _ := app.DB.Query("select * from customer")
-	defer rows.Close()
+
+	rows, err := app.DB.Query("select * from customer")
 
 	var customers []dto.Customer
 
-	if err = rows.Err(); err != nil {
+	if err != nil {
 		return customers, err
 	}
+
+	defer rows.Close()
 
 	for rows.Next() {
 		var cus dto.Customer
@@ -65,15 +66,16 @@ func (app *Application) UpdateCustomer(data dto.Customer, id string) (dto.Custom
 
 // Product
 func (app *Application) GetAllProduct() ([]dto.Product, error) {
-	var err error
-	rows, _ := app.DB.Query("select * from product")
-	defer rows.Close()
+	rows, err := app.DB.Query("select * from product")
+	
 
 	var products []dto.Product
 
-	if err = rows.Err(); err != nil {
+	if err != nil {
 		return products, err
 	}
+
+	defer rows.Close()
 
 	for rows.Next() {
 		var product dto.Product
@@ -122,15 +124,15 @@ func (app *Application) UpdateProduct(data dto.Product, id string) (dto.Product,
 //transaction
 
 func (app *Application) GetAllTransaction() ([]dto.TransactionResponse, error) {
-	var err error
-	rows, _ := app.DB.Query("select * from transaction left join customer on customer.id = transaction.customerid left join product on product.id = transaction.productid")
-	defer rows.Close()
+	rows, err := app.DB.Query("select * from transaction left join customer on customer.id = transaction.customerid left join product on product.id = transaction.productid")
 
 	var transactions []dto.TransactionResponse
 
-	if err = rows.Err(); err != nil {
+	if err != nil {
 		return transactions, err
 	}
+
+	defer rows.Close()
 
 	for rows.Next() {
 		var transaction dto.TransactionResponse
